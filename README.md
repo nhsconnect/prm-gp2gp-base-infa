@@ -1,4 +1,4 @@
-# prm-gp2gp-base-infa
+# prm-gp2gp-base-infra
 
 This repo contains Terraform to automate the provisioning of shared account
 wide resources that do not fit into a single environment.
