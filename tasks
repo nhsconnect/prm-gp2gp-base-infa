@@ -47,7 +47,7 @@ case "${task}" in
     ;;
     apply)
         tf_init ${tf_dir} ${stack_env}
-        terraform apply ${stack_env}.tfplan
+        terraform apply plan.tfplan
     ;;
     dojo-apply)
         dojo "./tasks apply"
