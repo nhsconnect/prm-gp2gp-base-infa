@@ -1,0 +1,61 @@
+#!/bin/bash
+
+set -Eeo pipefail
+
+stack_name=base-infra
+tf_dir=terraform
+
+stack_env="global"
+
+state_bucket="prm-gp2gp-terraform-state"
+state_lock_table="prm-gp2gp-terraform-table"
+state_region="eu-west-2"
+
+function tf_init {
+    directory=$1
+    stack_env=$2
+    terraform init \
+        -backend-config key=${stack_env}/${stack_name}/terraform.tfstate \
+        -backend-config bucket=${state_bucket} \
+        -backend-config dynamodb_table=${state_lock_table} \
+        -backend-config region=${state_region} \
+        ${directory}
+}
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 TASK"
+    exit 1
+fi
+
+task="$1"
+
+echo "--- ${task} ---"
+case "${task}" in
+    validate)
+        tf_init ${tf_dir} ${stack_env}
+        terraform validate ${tf_dir}
+    ;;
+    dojo-validate)
+        dojo "./tasks validate"
+    ;;
+    plan)
+        tf_init ${tf_dir} ${stack_env}
+        terraform plan -out=plan.tfplan ${tf_dir}
+    ;;
+    dojo-plan)
+        dojo "./tasks plan"
+    ;;
+    apply)
+        tf_init ${tf_dir} ${stack_env}
+        terraform apply ${stack_env}.tfplan
+    ;;
+    dojo-apply)
+        dojo "./tasks apply"
+    ;;
+    *)
+        echo "Invalid task: '${task}'"
+        exit 1
+    ;;
+esac
+
+set +e

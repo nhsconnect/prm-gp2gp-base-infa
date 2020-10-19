@@ -1,0 +1,56 @@
+format_version: 4
+pipelines:
+  "prm-gp2gp-base-infra":
+    group: gp2gp
+    label_template: "${git[:8]}"
+    materials:
+      git:
+        type: configrepo
+    stages:
+      - validate:
+          clean_workspace: true
+          jobs:
+            test:
+              resources:
+                - docker
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks dojo-validate
+      - plan:
+          clean_workspace: true
+          jobs:
+            plan:
+              resources:
+                - docker
+              artifacts:
+                - build:
+                    source: plan.tfplan
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks dojo-plan
+      - apply:
+          clean_workspace: true
+          approval:
+            type: manual
+            allow_only_on_success: true
+          jobs:
+            apply:
+              resources:
+                - docker
+              tasks:
+                - fetch:
+                    stage: plan
+                    job: plan
+                    source: plan.tfplan
+                    is_file: yes
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks dojo-apply
