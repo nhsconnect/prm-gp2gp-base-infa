@@ -6,6 +6,8 @@ pipelines:
     materials:
       git:
         type: configrepo
+    environment_variables:
+      NHS_ACCOUNT: common
     stages:
       - validate:
           clean_workspace: true

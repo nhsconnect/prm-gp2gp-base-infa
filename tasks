@@ -3,23 +3,36 @@
 set -Eeo pipefail
 
 stack_name=base-infra
-tf_dir=terraform
 
 stack_env="global"
-
-state_bucket="prm-gp2gp-terraform-state"
-state_lock_table="prm-gp2gp-terraform-table"
 state_region="eu-west-2"
+state_lock_table="prm-gp2gp-terraform-table"
 
 function tf_init {
-    directory=$1
-    stack_env=$2
+    stack_env=$1
+    setup_account_variables
+    rm -rf .terraform
     terraform init \
         -backend-config key=${stack_env}/${stack_name}/terraform.tfstate \
         -backend-config bucket=${state_bucket} \
         -backend-config dynamodb_table=${state_lock_table} \
         -backend-config region=${state_region} \
-        ${directory}
+        ${tf_dir}
+}
+
+function setup_account_variables {
+    if [ -z "${NHS_ACCOUNT}" ]; then
+      echo "NHS_ACCOUNT environment variable is not set."
+      exit 3
+    fi
+    if [ "${NHS_ACCOUNT}" == "common" ]; then
+      export state_bucket="prm-gp2gp-terraform-state"
+      export tf_dir=terraform
+    else
+      export state_bucket="prm-gp2gp-terraform-state-${NHS_ACCOUNT}"
+      export tf_dir=terraform-cross-account
+    fi
+    export TF_VAR_FILE="${NHS_ACCOUNT}.tfvars"
 }
 
 if [ "$#" -ne 1 ]; then
@@ -32,21 +45,21 @@ task="$1"
 echo "--- ${task} ---"
 case "${task}" in
     validate)
-        tf_init ${tf_dir} ${stack_env}
+        tf_init ${stack_env}
         terraform validate ${tf_dir}
     ;;
     dojo-validate)
         dojo "./tasks validate"
     ;;
     plan)
-        tf_init ${tf_dir} ${stack_env}
+        tf_init ${stack_env}
         terraform plan -out=plan.tfplan ${tf_dir}
     ;;
     dojo-plan)
         dojo "./tasks plan"
     ;;
     apply)
-        tf_init ${tf_dir} ${stack_env}
+        tf_init ${stack_env}
         terraform apply plan.tfplan
     ;;
     dojo-apply)
