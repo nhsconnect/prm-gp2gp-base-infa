@@ -45,7 +45,7 @@ pipelines:
                 - docker
               tasks:
                 - fetch:
-                    stage: plan
+                    stage: plan_dev
                     job: plan
                     source: plan.tfplan
                     is_file: yes
@@ -92,7 +92,7 @@ pipelines:
                 - docker
               tasks:
                 - fetch:
-                    stage: plan
+                    stage: plan_preprod
                     job: plan
                     source: plan.tfplan
                     is_file: yes
