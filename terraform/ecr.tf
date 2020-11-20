@@ -6,7 +6,6 @@ resource "aws_ecr_repository" "mi_data_collector" {
     CreatedBy   = var.repo_name
     Team        = var.team
   }
-
 }
 resource "aws_ecr_repository" "mesh_s3_synchronizer" {
   name = "gp2gp/mesh-s3-synchronizer"
@@ -16,5 +15,24 @@ resource "aws_ecr_repository" "mesh_s3_synchronizer" {
     CreatedBy   = var.repo_name
     Team        = var.team
   }
+}
 
+resource "aws_ecr_repository" "mesh_file_s3_forwarder" {
+  name = "registrations/mesh-file-s3-forwarder"
+
+  tags = {
+    Name        = "Mesh File S3 Forwarder"
+    CreatedBy   = var.repo_name
+    Team        = var.team
+  }
+}
+
+resource "aws_ecr_repository" "mesh_inbox_s3_forwarder" {
+  name = "registrations/mesh-inbox-s3-forwarder"
+
+  tags = {
+    Name        = "Mesh Inbox S3 Forwarder"
+    CreatedBy   = var.repo_name
+    Team        = var.team
+  }
 }
