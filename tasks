@@ -5,14 +5,14 @@ set -Eeo pipefail
 stack_name=base-infra
 
 stack_env="global"
-state_region="eu-west-2"
+aws_region="eu-west-2"
 state_lock_table="prm-gp2gp-terraform-table"
 
 function assume_role {
     if [ "${NHS_ACCOUNT}" == "common" ]; then
       return 0
     elif [ "${NHS_ACCOUNT}" == "dev" ] || [ "${NHS_ACCOUNT}" == "preprod" ]; then
-      role_arn=$(aws ssm get-parameters --names /registrations/${NHS_ACCOUNT}/user-input/cross-account-admin-role --query Parameters[0].Value --output text)
+      role_arn=$(aws ssm get-parameters --region ${aws_region} --names /registrations/${NHS_ACCOUNT}/user-input/cross-account-admin-role --query Parameters[0].Value --output text)
     else
       echo "NHS_ACCOUNT=${NHS_ACCOUNT} is not supported"
       exit 2
@@ -42,7 +42,7 @@ function tf_init {
         -backend-config key=${stack_env}/${stack_name}/terraform.tfstate \
         -backend-config bucket=${state_bucket} \
         -backend-config dynamodb_table=${state_lock_table} \
-        -backend-config region=${state_region} \
+        -backend-config region=${aws_region} \
         ${tf_dir}
 }
 
