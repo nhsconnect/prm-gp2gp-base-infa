@@ -18,9 +18,27 @@ Rolling out terraform is managed by the GoCD pipeline. If you'd like to preview 
 
 `aws-vault exec <profile-name> -- dojo`
 
-2. Invoke terraform locally
+2. Invoke terraform locally:
+
+- for common account
 
 ```
-  ./tasks validate
-  ./tasks plan
+  NHS_ACCOUNT=common ./tasks validate
+  NHS_ACCOUNT=common ./tasks plan
+```
+
+- for dev account
+
+```
+  NHS_ACCOUNT=dev ./tasks validate
+  NHS_ACCOUNT=dev ./tasks plan
+  NHS_ACCOUNT=dev ./tasks apply
+```
+
+- for preprod account
+
+```
+  NHS_ACCOUNT=preprod ./tasks validate
+  NHS_ACCOUNT=preprod ./tasks plan
+  NHS_ACCOUNT=preprod ./tasks apply
 ```
