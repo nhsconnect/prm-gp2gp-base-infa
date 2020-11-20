@@ -89,7 +89,7 @@ case "${task}" in
     apply)
         assume_role
         tf_init ${stack_env}
-        terraform apply -var-file="$TF_VAR_FILE" plan.tfplan
+        terraform apply plan.tfplan
     ;;
     dojo-apply)
         dojo "./tasks apply"
