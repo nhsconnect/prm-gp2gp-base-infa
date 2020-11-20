@@ -58,7 +58,7 @@ function setup_account_variables {
       export state_bucket="prm-gp2gp-terraform-state-${NHS_ACCOUNT}"
       export tf_dir=terraform-cross-account
     fi
-    export TF_VAR_FILE="${NHS_ACCOUNT}.tfvars"
+    export TF_VAR_FILE="${tf_dir}/${NHS_ACCOUNT}.tfvars"
 }
 
 if [ "$#" -ne 1 ]; then
@@ -81,7 +81,7 @@ case "${task}" in
     plan)
         assume_role
         tf_init ${stack_env}
-        terraform plan -out=plan.tfplan ${tf_dir}
+        terraform plan -var-file="$TF_VAR_FILE" -out=plan.tfplan ${tf_dir}
     ;;
     dojo-plan)
         dojo "./tasks plan"
@@ -89,7 +89,7 @@ case "${task}" in
     apply)
         assume_role
         tf_init ${stack_env}
-        terraform apply plan.tfplan
+        terraform apply -var-file="$TF_VAR_FILE" plan.tfplan
     ;;
     dojo-apply)
         dojo "./tasks apply"
