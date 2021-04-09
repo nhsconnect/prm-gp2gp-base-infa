@@ -8,12 +8,13 @@ resource "aws_ecr_repository" "mesh_inbox_s3_forwarder" {
   }
 }
 
-resource "aws_ecr_repository" "wordcount_example" {
-  name = "registrations/data-wordcount-example"
+resource "aws_ecr_repository" "ods_downloader" {
+  name = "registrations/ods-downloader"
 
   tags = {
-    Name        = "Wordcount example data processing job"
+    Name        = "Ods data downloader"
     CreatedBy   = var.repo_name
     Team        = var.team
   }
 }
+
