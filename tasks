@@ -94,6 +94,11 @@ case "${task}" in
     dojo-apply)
         dojo "./tasks apply"
     ;;
+    format)
+        assume_role
+        tf_init ${stack_env}
+        terraform fmt ${tf_dir}
+    ;;
     *)
         echo "Invalid task: '${task}'"
         exit 1
