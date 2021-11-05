@@ -11,7 +11,7 @@ variable "repo_name" {
 }
 
 variable "region" {
-  type = string
+  type    = string
   default = "eu-west-2"
 }
 
