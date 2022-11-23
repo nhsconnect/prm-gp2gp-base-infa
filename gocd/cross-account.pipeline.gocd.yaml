@@ -54,7 +54,7 @@ pipelines:
                     arguments:
                       - -c
                       - NHS_ACCOUNT=dev ./tasks dojo-apply
-      - validate_preprod:
+      - validate_prod:
           clean_workspace: true
           jobs:
             test:
@@ -65,8 +65,8 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - NHS_ACCOUNT=preprod ./tasks dojo-validate
-      - plan_preprod:
+                      - NHS_ACCOUNT=prod ./tasks dojo-validate
+      - plan_prod:
           clean_workspace: true
           jobs:
             plan:
@@ -80,8 +80,8 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - NHS_ACCOUNT=preprod ./tasks dojo-plan
-      - apply_preprod:
+                      - NHS_ACCOUNT=prod ./tasks dojo-plan
+      - apply_prod:
           clean_workspace: true
           approval:
             type: manual
@@ -92,7 +92,7 @@ pipelines:
                 - docker
               tasks:
                 - fetch:
-                    stage: plan_preprod
+                    stage: plan_prod
                     job: plan
                     source: plan.tfplan
                     is_file: yes
@@ -100,4 +100,4 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - NHS_ACCOUNT=preprod ./tasks dojo-apply
+                      - NHS_ACCOUNT=prod ./tasks dojo-apply

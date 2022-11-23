@@ -12,7 +12,7 @@ These instructions assume you are using:
 
 ## Applying terraform
 
-Rolling out terraform is managed by the GoCD pipeline. If you'd like to preview changes locally, run the following commands:
+Rolling out terraform is managed by the GoCD pipeline. If you'd like to view changes locally, run the following commands:
 
 1. Enter the container:
 
@@ -35,10 +35,10 @@ Rolling out terraform is managed by the GoCD pipeline. If you'd like to preview 
   NHS_ACCOUNT=dev ./tasks apply
 ```
 
-- for preprod account
+- for prod account
 
 ```
-  NHS_ACCOUNT=preprod ./tasks validate
-  NHS_ACCOUNT=preprod ./tasks plan
-  NHS_ACCOUNT=preprod ./tasks apply
+  NHS_ACCOUNT=prod ./tasks validate
+  NHS_ACCOUNT=prod ./tasks plan
+  NHS_ACCOUNT=prod ./tasks apply
 ```
