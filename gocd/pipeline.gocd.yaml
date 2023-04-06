@@ -41,11 +41,13 @@ pipelines:
                       - -c
                       - ./tasks dojo-plan
                 - exec:
+                    runif: any
                     command: /bin/bash
                     arguments:
                       - -c
                       - ls -lsa
                 - exec:
+                    runif: any
                     command: /bin/bash
                     arguments:
                       - -c
