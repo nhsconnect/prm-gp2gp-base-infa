@@ -27,7 +27,11 @@ pipelines:
                 - docker
               artifacts:
                 - build:
-                    source: plan.tfplan
+                    source: terraform-cross-account/plan.tfplan
+                    destination: terraform-cross-account/
+                - build:
+                    source: terraform-cross-account/.terraform.lock.hcl
+                    destination: terraform-cross-account/
               tasks:
                 - exec:
                     command: /bin/bash
@@ -47,7 +51,14 @@ pipelines:
                 - fetch:
                     stage: plan_dev
                     job: plan
-                    source: plan.tfplan
+                    source: terraform-cross-account/plan.tfplan
+                    destination: terraform-cross-account/
+                    is_file: yes
+                - fetch:
+                    stage: plan_dev
+                    job: plan
+                    source: terraform-cross-account/.terraform.lock.hcl
+                    destination: terraform-cross-account/
                     is_file: yes
                 - exec:
                     command: /bin/bash
@@ -74,7 +85,11 @@ pipelines:
                 - docker
               artifacts:
                 - build:
-                    source: plan.tfplan
+                    source: terraform-cross-account/plan.tfplan
+                    destination: terraform-cross-account/
+                - build:
+                    source: terraform-cross-account/.terraform.lock.hcl
+                    destination: terraform-cross-account/
               tasks:
                 - exec:
                     command: /bin/bash
@@ -94,7 +109,14 @@ pipelines:
                 - fetch:
                     stage: plan_prod
                     job: plan
-                    source: plan.tfplan
+                    source: terraform-cross-account/plan.tfplan
+                    destination: terraform-cross-account/
+                    is_file: yes
+                - fetch:
+                    stage: plan_prod
+                    job: plan
+                    source: terraform-cross-account/.terraform.lock.hcl
+                    destination: terraform-cross-account/
                     is_file: yes
                 - exec:
                     command: /bin/bash
