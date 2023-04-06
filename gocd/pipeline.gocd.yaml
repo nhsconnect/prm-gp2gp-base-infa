@@ -29,7 +29,11 @@ pipelines:
                 - docker
               artifacts:
                 - build:
-                    source: plan.tfplan
+                    source: terraform/plan.tfplan
+                    destination: terraform/
+                - build:
+                    source: terraform/.terraform.lock.hcl
+                    destination: terraform/
               tasks:
                 - exec:
                     command: /bin/bash
@@ -49,7 +53,14 @@ pipelines:
                 - fetch:
                     stage: plan
                     job: plan
-                    source: plan.tfplan
+                    source: terraform/plan.tfplan
+                    destination: terraform/
+                    is_file: yes
+                - fetch:
+                    stage: plan
+                    job: plan
+                    source: terraform/.terraform.lock.hcl
+                    destination: terraform/
                     is_file: yes
                 - exec:
                     command: /bin/bash
