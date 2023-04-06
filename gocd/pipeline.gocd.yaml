@@ -40,18 +40,6 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks dojo-plan
-                - exec:
-                    runif: any
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ls -lsa
-                - exec:
-                    runif: any
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ls -lsa terraform
       - apply:
           clean_workspace: true
           approval:
