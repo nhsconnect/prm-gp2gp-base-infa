@@ -38,12 +38,11 @@ function tf_init {
     stack_env=$1
     setup_account_variables
     rm -rf .terraform
-    terraform init \
+    terraform -chdir=${tf_dir} init \
         -backend-config key=${stack_env}/${stack_name}/terraform.tfstate \
         -backend-config bucket=${state_bucket} \
         -backend-config dynamodb_table=${state_lock_table} \
-        -backend-config region=${aws_region} \
-        ${tf_dir}
+        -backend-config region=${aws_region}
 }
 
 function setup_account_variables {
@@ -73,7 +72,7 @@ case "${task}" in
     validate)
         assume_role
         tf_init ${stack_env}
-        terraform validate ${tf_dir}
+        terraform -chdir=${tf_dir} validate
     ;;
     dojo-validate)
         dojo "./tasks validate"
@@ -81,7 +80,8 @@ case "${task}" in
     plan)
         assume_role
         tf_init ${stack_env}
-        terraform plan -var-file="$TF_VAR_FILE" -out=plan.tfplan ${tf_dir}
+        plan_output="$(eval "pwd")/${tf_dir}/plan.tfplan"
+        terraform -chdir=${tf_dir} plan -var-file="$TF_VAR_FILE" -out=${plan_output}
     ;;
     dojo-plan)
         dojo "./tasks plan"
@@ -89,7 +89,7 @@ case "${task}" in
     apply)
         assume_role
         tf_init ${stack_env}
-        terraform apply plan.tfplan
+        terraform -chdir=${tf_dir} apply plan.tfplan
     ;;
     dojo-apply)
         dojo "./tasks apply"
@@ -97,7 +97,7 @@ case "${task}" in
     format)
         assume_role
         tf_init ${stack_env}
-        terraform fmt ${tf_dir}
+        terraform -chdir=${tf_dir} fmt
     ;;
     *)
         echo "Invalid task: '${task}'"
