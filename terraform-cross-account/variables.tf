@@ -18,3 +18,7 @@ variable "region" {
 variable "zone_name" {
   type = string
 }
+
+variable "cross_account_admin_role_principal" {
+  type = string
+}

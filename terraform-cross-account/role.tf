@@ -1,5 +1,5 @@
 data "aws_ssm_parameter" "gocd_trusted_principal" {
-  name = "/registrations/user-input/gocd-trusted-principal"
+  name = var.cross_account_admin_role_principal
 }
 
 data "aws_iam_policy_document" "trust_policy" {
