@@ -81,7 +81,7 @@ case "${task}" in
         assume_role
         tf_init ${stack_env}
         plan_output="$(eval "pwd")/${tf_dir}/plan.tfplan"
-        terraform -chdir=${tf_dir} plan -var-file="$TF_VAR_FILE" -out=${plan_output}
+        terraform -chdir=${tf_dir} plan -var-file="$(eval "pwd")/$TF_VAR_FILE" -out=${plan_output}
     ;;
     dojo-plan)
         dojo "./tasks plan"
